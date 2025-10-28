@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Four-sdk"
+version = "0.1.0"
+description = "Python SDK for FourMeme contracts"
+readme = "README.md"
+requires-python = ">=3.11"
+
+authors = [
+    {name = "Freemandaily", email = "Freemanonah@gmail.com"}
+]
+keywords = ["blockchain", "ethereum", "defi", "trading", "bonding-curve"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "web3>=6.0.0",
+    "eth-account>=0.10.0",
+    "eth-abi>=4.0.0",
+    "eth-utils>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Freemandaily/Four-sdk"
+Issues = "https://github.com/Freemandaily/Four-sdk/issues"
+Repository = "https://github.com/Freemandaily/Four-sdk"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
