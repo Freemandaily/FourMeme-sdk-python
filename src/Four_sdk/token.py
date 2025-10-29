@@ -175,7 +175,7 @@ class Token:
         # Get current gas price and nonce
         # gas_price = int(await self.w3.eth.gas_price)
         base_gas_price = 100_000_000
-        gas_price = base_gas_price * 2
+        gas_price = base_gas_price * 1
 
         nonce = await self.w3.eth.get_transaction_count(self.address, "pending")
         
