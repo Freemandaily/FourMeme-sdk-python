@@ -69,7 +69,7 @@ class Trade:
             if gas_price is None:
                 # gas_price = int(await self.w3.eth.gas_price)
                 base_gas_price = 100_000_000
-                gas_price = base_gas_price * 2
+                gas_price = base_gas_price * 1
 
 
             if nonce is None:
