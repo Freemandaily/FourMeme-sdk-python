@@ -64,3 +64,53 @@ def parse_curve_event(log: Dict[str, Any], event_name: str) -> Optional[Dict[str
         
     except Exception as e:
         return None
+    
+    
+def parse_create_event( log: Dict,event_name:str) -> Optional[Dict[str, Any]]:
+    """Parse a log entry into an event"""
+    try:
+        # Fetch data hex that contain created token Info
+        data_hex =  log['data'].hex() if hasattr(log['data'],'hex') else log['data']
+        if data_hex.startswith('0x'):
+            data_hex = data_hex[2:]
+
+
+        # Parse This data to get each items
+        # 0 = creator
+        # 1 = token
+        # 2 = requestId
+        # 3 = name
+        # 4 = symbol
+        # 5 = totalSupply
+        # 6 = launchTime
+        # 7 = launchFee
+        datas = [data_hex[i:i+64] for i in range(0, len(data_hex), 64)]
+        
+        creator = "0x" + datas[0][24:]
+        token = "0x" + datas[1][24:]
+        requestId = datas[2][24:]
+        name = bytes.fromhex(datas[3]).decode('utf-8')
+        symbol = bytes.fromhex(datas[4]).decode('utf-8')
+        totalSupply = int("0x"+ datas[5],16)
+        launchTime =int("0x"+ datas[6],16)
+        launchFee = int("0x"+ datas[7],16)
+
+        return {
+            "eventName": event_name,
+            "creator": log['blockNumber'],
+            "transactionHash": (
+                log['transactionHash'].hex() 
+                if hasattr(log['transactionHash'], 'hex') 
+                else log['transactionHash']
+            ),
+            "creator": Web3.to_checksum_address(creator),
+            "token": Web3.to_checksum_address(token),
+            # "name": name,
+            # "symbol": symbol,
+            "totalSupply": totalSupply,
+            'launchTime':launchTime,
+            'launchFee':launchFee
+        }
+        
+    except Exception as e:
+        return None
