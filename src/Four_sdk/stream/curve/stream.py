@@ -3,7 +3,7 @@ from typing import List, AsyncIterator, Optional, Dict, Any
 from web3 import AsyncWeb3, WebSocketProvider, Web3
 from ...constants import CONTRACTS
 from ..types import EventType
-from .parser import parse_curve_event
+from .parser import parse_curve_event,parse_create_event
 
 class CurveStream:
     def __init__(self, ws_url: str):
@@ -30,7 +30,7 @@ class CurveStream:
            
 
         
-    async def events(self) -> AsyncIterator[Dict[str, Any]]:
+    async def events(self,creat_event:bool=False) -> AsyncIterator[Dict[str, Any]]:
         """Async iterator that yields parsed events"""
         # Create topics and mapping
         topics = []
@@ -53,6 +53,7 @@ class CurveStream:
                 "topics": [topics]  # [[buy, sell]] for OR filter
             }
             # Subscribe
+            print('Subscribed')
             self._subscription_id = await w3.eth.subscribe("logs", filter_params)
             
             # Process events
@@ -80,13 +81,18 @@ class CurveStream:
                 if not event_name:
                     continue
                 # Parse and yield event
-                event = parse_curve_event(log, event_name)
-                if event:
-                    # Filter by token address if specified
-                    if self.token_addresses:
-                        event_token = event.get('token', '').lower()
-                        if not any(addr.lower() == event_token for addr in self.token_addresses):
-                            continue
-                    yield event
-          
+                if not creat_event:
+                    event = parse_curve_event(log, event_name)
+                    if event:
+                        # Filter by token address if specified
+                        if self.token_addresses:
+                            event_token = event.get('token', '').lower()
+                            if not any(addr.lower() == event_token for addr in self.token_addresses):
+                                continue
+                        yield event
+                else:
+                    event = parse_create_event(log,event_name)
+                    if event:
+                        yield event
+            
        
